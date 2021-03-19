@@ -5,32 +5,19 @@ namespace RusaDrako\driver_db;
 require_once('db.php');
 require_once('db_get.php');
 
-/** Загружает все файлы из текущей папки и подпапок, кроме указанных в ограничении */
-function autoload($dir, array $exclusion = []) {
-	$exclusion = array_merge([".",".."], $exclusion);
-	$result = [];
-	$cdir = scandir($dir);
-	foreach ($cdir as $key => $value) {
-		if (!in_array($value, $exclusion)) {
-			# Если есть маркер "удалённого" элемент
-			if (mb_substr($value, 0, 3) == '___') {
-				continue;
-			}
-			# Если это директория
-			if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
-				$result[$value] = autoload($dir . DIRECTORY_SEPARATOR . $value);
-			# Грузим только '*.php'
-			} elseif (substr($value, -4, 4) == '.php') {
-				require_once($dir . DIRECTORY_SEPARATOR . $value);
-				$result[] = $value;
-			}
-		}
-	}
-	return $result;
-}
+require_once(__DIR__ . '/drivers/_interface_class.php');
 
-# Автозагрузчик
-autoload(__DIR__ . '/drivers');
+require_once(__DIR__ . '/drivers/_trait__delete.php');
+require_once(__DIR__ . '/drivers/_trait__error.php');
+require_once(__DIR__ . '/drivers/_trait__get_set.php');
+require_once(__DIR__ . '/drivers/_trait__insert.php');
+require_once(__DIR__ . '/drivers/_trait__query.php');
+require_once(__DIR__ . '/drivers/_trait__update.php');
+
+require_once(__DIR__ . '/drivers/mysql_class.php');
+require_once(__DIR__ . '/drivers/mysql_class.php');
+require_once(__DIR__ . '/drivers/mysql_pdo_class.php');
+require_once(__DIR__ . '/drivers/sqlsrv_class.php');
+require_once(__DIR__ . '/drivers/sqlsrv_pdo_class.php');
 
 require_once('aliases.php');
-
