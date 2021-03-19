@@ -1,0 +1,21 @@
+{
+    "name": "rusadrako/driver_db",
+    "description": "Библиотека подключения к различным БД",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Petukhov Leonid",
+            "email": "rusadrako@yandex.ru"
+        }
+    ],
+    "require": {},
+	"minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "rd\\driver_db\\": "src"
+        },
+        "files": [
+            "src/autoload.php"
+        ]
+    }
+}
