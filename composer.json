@@ -8,11 +8,13 @@
             "email": "rusadrako@yandex.ru"
         }
     ],
-    "require": {},
-	"minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "rd\\driver_db\\": "src"
+            "RusaDrako\\driver_db\\": "src"
         },
         "files": [
             "src/autoload.php"
