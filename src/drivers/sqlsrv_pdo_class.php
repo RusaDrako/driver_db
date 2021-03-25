@@ -204,8 +204,7 @@ class sqlsrv_pdo_class implements _interface_class {
 	 * @param array $v Значение переменной.
 	 */
 	protected function _db_get_set_clean($v) {
-		$v = \htmlspecialchars(\stripslashes(\trim($v)));
-		$v = \str_replace("'", '&#039;', $v);
+		$v = \addslashes($v);
 		return $v;
 	}
 
