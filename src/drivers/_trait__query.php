@@ -7,12 +7,12 @@ trait _trait__query {
 
 
 
-	/** Функция возвращает возвращает результат запроса в БД.
+	/** Возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	public function query($query, $return_error = false) {
-		$result = $this->_query($query, $return_error);
+	public function query($query) {
+		$result = $this->_query($query);
 		# Возвращаем значение
 		return $result;
 	}

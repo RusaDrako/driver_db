@@ -119,9 +119,8 @@ class mysqli_class implements _interface_class {
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
-	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	private function _query($query, $return_error = false) {
+	private function _query($query) {
 		# Если нет подключения к БД, то возвращаем false
 		if (!$this->_connect) {return false;}
 		# Значение результата по-умолчанию
