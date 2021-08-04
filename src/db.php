@@ -94,11 +94,6 @@ class db {
 		try {
 			if (!method_exists($class_name, $name)) {
 				throw new \Exception("Метод {$class_name}::{$name}() не определён");
-				# Выводим сообщение
-	//			echo 'ОШИБКА: ' . $class_name . ' :: ' . $name . '(): Метод не найден.';
-	//			echo '<br>';
-				# Возвращаем false
-//				return false;
 			}
 			# Создаём объект метода
 			$refMethod = new ReflectionMethod($class_name, $name);
