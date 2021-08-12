@@ -48,7 +48,7 @@ interface _interface_class {
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	public function query($query, $return_error = false);
+	public function query($query);
 
 
 
@@ -87,4 +87,3 @@ interface _interface_class {
 
 /**/
 }
-
