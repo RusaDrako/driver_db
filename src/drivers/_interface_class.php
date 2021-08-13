@@ -79,7 +79,7 @@ interface _interface_class {
 	 * @param string $table_name Имя таблицы.
 	 * @param array $where Условие обработки строк.
 	 * @return bool Ответ БД: true - выполнено; false - не выполнено. */
-	public function delete(string $table_name, array $arr_where);
+	public function delete(string $table_name, $arr_where);
 
 
 

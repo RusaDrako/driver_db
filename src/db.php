@@ -63,7 +63,7 @@ class db {
 	 * @param string $prefix Префикс имён для получения данных из объекта $reg
 	 * @param object $reg Объект данных реализующий метод get($name, $def_value)
 	 */
-	public function set_setting_object(string $prefix, object $reg) {
+	public function set_setting_object(string $prefix, $reg) {
 		$class_name = '\\' . __NAMESPACE__ . '\\db_setting';
 		$this->_obj_setting = new $class_name();
 		$this->_obj_setting->set_setting($prefix, $reg);
@@ -173,8 +173,8 @@ class db {
 	 * @param string $assoc Ассоциативный массив.
 	 * @return array Ответ БД (массив данных).
 	 */
-	public function select(string $query, bool $assoc = true) {
-		return $this->_obj_driver->select($query, $assoc);
+	public function select(string $query, $assoc = true) {
+		return $this->_obj_driver->select($query, (bool) $assoc);
 	}
 
 

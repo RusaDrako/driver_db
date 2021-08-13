@@ -163,7 +163,7 @@ class mysql_pdo_class implements _interface_class {
 	 * @param string $query Строка запроса.
 	 * @param string $assoc Ассоциативный массив.
 	 * @return array Ответ БД (массив данных). */
-	public function select($query, $assoc = true) {
+	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = [];
 		# Выполняем запрос

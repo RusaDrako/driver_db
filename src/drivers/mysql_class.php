@@ -167,7 +167,7 @@ $this->_count_rows = \mysql_affected_rows($this->db);
 	 * @param string $query Строка запроса.
 	 * @param string $assoc Ассоциативный массив.
 	 * @return array Ответ БД (массив данных). */
-	public function select(string $query, $assoc = true) {
+	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = array();
 		# Выполняем запрос

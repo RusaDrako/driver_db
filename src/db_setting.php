@@ -19,7 +19,7 @@ class db_setting {
 	 * @param string $prefix Префикс имён для получения данных из объекта $reg
 	 * @param object $reg Объект данных реализующий метод get($name, $def_value)
 	 */
-	public function set_setting(string $prefix, object $reg) {
+	public function set_setting(string $prefix, $reg) {
 		$arr_set = [
 			'driver'         => $reg->get($prefix . '_DRIVER',         'mysqli'),      # Драйвер БД
 			'host'           => $reg->get($prefix . '_HOST',           'localhost'),   # Имя сервера
