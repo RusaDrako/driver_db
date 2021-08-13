@@ -85,7 +85,8 @@ class mysqli_class implements _interface_class {
 		# Подключаемся к БД-серверу
 		$db = @\mysqli_connect($this->_db_host, $this->_db_user_name, $this->_db_password, $this->_db_name_db);
 		if (!$db) {
-			die('<b>' . __FILE__ . '(' . __LINE__ . ')</b> Ошибка подключения к БД: ' . \mysqli_connect_error());
+			# Выводим сообщение об ошибке
+			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . \mysqli_connect_error());
 		} else {
 			# Присваеваем переменной соединение с БД
 			$this->db = $db;

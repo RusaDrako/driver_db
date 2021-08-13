@@ -97,10 +97,7 @@ class sqlsrv_class implements _interface_class {
 			$num_error = $error['code'];
 			$error = $error['message'];
 			# Вывод сообщения об ошибке
-//			$this->_error($num_error, $error, $query);
-//			$str = $this->_error_to_string(\sqlsrv_errors());
-			die('<b>' . __FILE__ . '(' . __LINE__ . ')</b> Ошибка подключения к БД: ' . $num_error . ': ' . $error);
-			return false;
+			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . $num_error . ': ' . $error);
 		}
 		# Присваеваем переменной соединение с БД
 		$this->db = $db;

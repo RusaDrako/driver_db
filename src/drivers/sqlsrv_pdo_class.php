@@ -104,9 +104,7 @@ class sqlsrv_pdo_class implements _interface_class {
 		# Ловим ошибку
 		} catch (\PDOException $e) {
 			# Выводим сообщение об ошибке
-			die('<b>' . __FILE__ . '(' . __LINE__ . ')</b> Ошибка подключения к БД: ' . $e->getMessage() . "\n");
-			# Возвращаем false
-			return false;
+			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . $e->getMessage());
 		}
 		# Присваеваем переменной соединение с БД
 		$this->_pdo = $pdo;
