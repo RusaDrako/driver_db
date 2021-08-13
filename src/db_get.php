@@ -6,26 +6,12 @@ namespace RusaDrako\driver_db;
 
 
 
-/** */
+/** Класс хранения переменных */
 class db_get {
 	/**
 	 * @param array $_keys Массив ключей со значениями
 	 */
 	private $_value             = [];
-
-
-
-
-
-	/** */
-	public function __construct() {}
-
-
-
-
-
-	/** */
-	public function __destruct() {}
 
 
 

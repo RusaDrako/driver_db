@@ -6,7 +6,7 @@ namespace RusaDrako\driver_db;
 
 
 
-/** */
+/** Настройки для конкретного подключения */
 class db_setting {
 	/** Расширение шаблона */
 	private $_setting = [];
@@ -15,11 +15,11 @@ class db_setting {
 
 
 
-	/** Конструктор объекта (загрузка настроек) */
-	public function __construct($prefix, $reg = null) {
-		if ($reg === null) {
-			$reg = \registry::call();
-		}
+	/** Возвращает значение свойства по имени
+	 * @param string $prefix Префикс имён для получения данных из объекта $reg
+	 * @param object $reg Объект данных реализующий метод get($name, $def_value)
+	 */
+	public function set_setting(string $prefix, object $reg) {
 		$arr_set = [
 			'driver'         => $reg->get($prefix . '_DRIVER',         'mysqli'),      # Драйвер БД
 			'host'           => $reg->get($prefix . '_HOST',           'localhost'),   # Имя сервера
@@ -38,14 +38,7 @@ class db_setting {
 
 
 
-	/** Деструктор класса */
-	public function __destruct() {}
-
-
-
-
-
-	/** */
+	/** Возвращает значение свойства по имени */
 	public function get_value($name) {
 		if (isset($this->_setting[$name])) {
 			return $this->_setting[$name];
@@ -57,20 +50,28 @@ class db_setting {
 
 
 
-	/** Возвращает объект подключённого драйвера */
-	public function get_driver() {
-		$driver_name = $this->_setting['driver'] . '_class';
-		$driver_file = __DIR__ . '/drivers/' . $driver_name . '.php';
-		if (\file_exists($driver_file)) {
-			require_once($driver_file);
-			$class_name = '\\' . __NAMESPACE__ . '\\drivers\\' . $driver_name;
-			$_obj = new $class_name($this);
-			return $_obj;
-		}
-		return null;
+	/** Возвращает имя класса драйвера */
+	private function get_driver_name() {
+		return $this->_setting['driver'] . '_class';
 	}
 
 
+
+
+
+	/** Возвращает имя класса драйвера */
+	public function get_driver_file() {
+		return __DIR__ . '/drivers/' . $this->get_driver_name() . '.php';
+	}
+
+
+
+
+
+	/** Возвращает имя класса драйвера */
+	public function get_driver_class() {
+		return '\\' . __NAMESPACE__ . '\\drivers\\' . $this->get_driver_name();
+	}
 
 
 
