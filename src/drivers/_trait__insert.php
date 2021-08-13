@@ -12,7 +12,7 @@ trait _trait__insert {
 	 * @param array $array_insert Массив с переменными для добавления.
 	 * @param array $arr_where Условие добавления строки.
 	 * @return array Ответ БД (номер новой строки) или false. */
-	public function insert($table_name, $array_insert, $arr_where = []) {
+	public function insert(string $table_name, array $array_insert, $arr_where = []) {
 		# Проверка условий прерывания кода
 		if (empty($table_name)) {
 			# Возвращаем false

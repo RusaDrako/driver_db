@@ -11,7 +11,7 @@ trait _trait__query {
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	public function query($query) {
+	public function query(string $query) {
 		$result = $this->_query($query);
 		# Возвращаем значение
 		return $result;

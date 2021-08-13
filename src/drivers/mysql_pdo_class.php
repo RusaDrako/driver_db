@@ -51,7 +51,7 @@ class mysql_pdo_class implements _interface_class {
 
 
 	/** Загрузка класса */
-	public function __construct($obj_settings) {
+	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
 		# Получаем версию PHP и разбиваем её в массив по точке
 		$arr_php_vertion = explode('.',phpversion());
 		# Настройки подключения к БД

@@ -51,7 +51,7 @@ class mysql_class implements _interface_class {
 
 
 	/** Загрузка класса */
-	public function __construct($obj_settings) {
+	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
 		# Настройки подключения к БД
 		$this->_db_server_name		= $obj_settings->get_value('host');				# Имя сервера
 		if ($port = $obj_settings->get_value('port')) {
@@ -121,7 +121,7 @@ class mysql_class implements _interface_class {
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
  	* @return array Ответ БД. */
-	private function _query($query) {
+	private function _query(string $query) {
 		# Если нет подключения к БД, то возвращаем false
 		if (!$this->_connect) {return false;}
 		# Значение результата по-умолчанию
@@ -167,7 +167,7 @@ $this->_count_rows = \mysql_affected_rows($this->db);
 	 * @param string $query Строка запроса.
 	 * @param string $assoc Ассоциативный массив.
 	 * @return array Ответ БД (массив данных). */
-	public function select($query, $assoc = true) {
+	public function select(string $query, $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = array();
 		# Выполняем запрос

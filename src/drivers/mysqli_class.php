@@ -51,7 +51,7 @@ class mysqli_class implements _interface_class {
 
 
 	/** Загрузка класса */
-	public function __construct($obj_settings) {
+	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
 		# Настройки подключения к БД
 		$this->_db_host		= $obj_settings->get_value('host');				# Имя сервера
 		if ($port = $obj_settings->get_value('port')) {

@@ -12,7 +12,7 @@ trait _trait__update {
 	 * @param array $array_update Массив с переменными для обновления.
 	 * @param array/string $where Условие обработки строк.
 	 * @return bool true или false. */
-	public function update($table_name, $array_update, $where) {
+	public function update(string $table_name, array $array_update, $where) {
 		# Проверка условий прерывания кода
 		if (empty($table_name)
 				|| empty($array_update)

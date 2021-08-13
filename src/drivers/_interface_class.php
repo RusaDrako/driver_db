@@ -20,7 +20,7 @@ interface _interface_class {
 	/** Загрузка класса
 	 * @param array $settings = [] - массив настроек
 	 * @return null*/
-	public function __construct($settings);
+	public function __construct(\RusaDrako\driver_db\db_setting $settings);
 
 
 
@@ -31,7 +31,7 @@ interface _interface_class {
 	 * @param array $arr_insert Массив с переменными для добавления.
 	 * @param array $arr_where Условие добавления строки.
 	 * @return array Ответ БД: ID номер новой строки или false. */
-	public function insert($table_name, $arr_insert, $arr_where);
+	public function insert(string $table_name, array $arr_insert, $arr_where = []);
 
 
 
@@ -48,7 +48,7 @@ interface _interface_class {
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	public function query($query);
+	public function query(string $query);
 
 
 
@@ -58,7 +58,7 @@ interface _interface_class {
 	 * @param string $query Строка запроса.
 	 * @param string $key Ключ поля, которое следует использовать в качестве ключей массива.
 	 * @return array Ответ БД (массив данных). */
-	public function select($query, $assoc = true);
+	public function select(string $query, bool $assoc = true);
 
 
 
@@ -69,7 +69,7 @@ interface _interface_class {
 	 * @param array $arr_update Массив с переменными для обновления.
 	 * @param array $arr_where Условие обработки строк.
 	 * @return bool Ответ БД: true или false. */
-	public function update($table_name, $arr_update, $arr_where);
+	public function update(string $table_name, array $arr_update, $arr_where);
 
 
 
@@ -79,7 +79,7 @@ interface _interface_class {
 	 * @param string $table_name Имя таблицы.
 	 * @param array $where Условие обработки строк.
 	 * @return bool Ответ БД: true - выполнено; false - не выполнено. */
-	public function delete($table_name, $arr_where);
+	public function delete(string $table_name, array $arr_where);
 
 
 

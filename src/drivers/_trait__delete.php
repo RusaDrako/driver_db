@@ -11,7 +11,7 @@ trait _trait__delete {
 	 * @param string $table_name Имя таблицы.
 	 * @param array/string $where Условие обработки строк.
 	 * @return bool Ответ БД: true - выполнено; false - не выполнено. */
-	public function delete($table_name, $where) {
+	public function delete(string $table_name, $where) {
 		# Проверка условий прерывания кода
 		if (empty($table_name)) {
 			# Возвращаем false

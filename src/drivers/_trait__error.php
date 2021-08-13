@@ -12,7 +12,7 @@ trait _trait__error {
 	 * @param string $error Текст ошибки.
 	 * @param string $query Тело запроса.
 	 */
-	public function _error($num_error, $error, $query = '') {
+	public function _error(string $num_error, string $error, string $query = '') {
 		# Вывод сообщения об ошибке
 		$text_error = "{$num_error}: {$error}<br>\r\n{$query}";
 		# Генерация ошибки

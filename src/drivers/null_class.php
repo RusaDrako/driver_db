@@ -33,7 +33,7 @@ class null_class implements _interface_class {
 	 * @param array $arr_insert Массив с переменными для добавления.
 	 * @param array $arr_where Условие добавления строки.
 	 * @return array Ответ БД: ID номер новой строки или false. */
-	public function insert($table_name, $arr_insert, $arr_where) {
+	public function insert(string $table_name, array $arr_insert, $arr_where = []) {
 		return 0;
 	}
 
@@ -55,7 +55,7 @@ class null_class implements _interface_class {
 	 * @param array $data Массив данных для запроса
 	 * @return array Ответ БД.
 	 */
-	public function query(string $query, array $data) {
+	public function query(string $query) {
 		return 0;
 	}
 
@@ -68,7 +68,7 @@ class null_class implements _interface_class {
 	 * @param array $data Массив данных для запроса
 	 * @return array Ответ БД (массив данных).
 	 */
-	public function select(string $query, array $data = [], bool $assoc = true) {
+	public function select(string $query, bool $assoc = true) {
 		return 0;
 	}
 
