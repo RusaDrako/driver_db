@@ -23,4 +23,7 @@ require_once(__DIR__ . '/drivers/mysqli_class.php');
 require_once(__DIR__ . '/drivers/sqlsrv_class.php');
 require_once(__DIR__ . '/drivers/sqlsrv_pdo_class.php');
 
+require_once('db_exception.php');
+
+
 require_once('aliases.php');

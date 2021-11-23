@@ -295,7 +295,7 @@ class db_Test extends TestCase {
 
 
 
-	/** Проверяет выполнение select (ошибка типа) */
+	/* * Проверяет выполнение select (ошибка типа) * /
 	public function test_select_error_2() {
 		$this->expectException('TypeError');
 		$this->_test_object->select('', []);
