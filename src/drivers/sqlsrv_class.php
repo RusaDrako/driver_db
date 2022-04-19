@@ -179,17 +179,14 @@ class sqlsrv_class implements _interface_class {
 			$arr_result = [];
 			# Если следует использовать ключевое поле
 			if ($assoc) {
-				# Проходим по результату запроса
-				while ($array_temp = $this->_data_handler(\sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC))) {
-					# Формируем массив результатов - с использованием ключа
-					$arr_result[] = $array_temp;
-				}
+				$assoc_mark = SQLSRV_FETCH_ASSOC;
 			} else {
-				# Проходим по результату запроса
-				while ($array_temp = $this->_data_handler(\sqlsrv_fetch_array($result, SQLSRV_FETCH_NUMERIC))) {
-					# Формируем массив результатов - обезличенный
-					$arr_result[] = $array_temp;
-				}
+				$assoc_mark = SQLSRV_FETCH_NUMERIC;
+			}
+			# Проходим по результату запроса
+			while ($array_temp = $this->_data_handler(\sqlsrv_fetch_array($result, $assoc_mark))) {
+				# Формируем массив результатов - обезличенный
+				$arr_result[] = $array_temp;
 			}
 		}
 		# Возвращаем значение

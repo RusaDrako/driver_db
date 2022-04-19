@@ -179,14 +179,15 @@ class sqlsrv_pdo_class implements _interface_class {
 		# Выполняем запрос
 		if ($result = $this->_query($query)) {
 			$arr_result = [];
+			# Если следует использовать ключевое поле
 			if ($assoc) {
-				while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-					$arr_result[] = $row;
-				}
+				$assoc_mark = \PDO::FETCH_ASSOC;
 			} else {
-				while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-					$arr_result[] = $row;
-				}
+				$assoc_mark = \PDO::FETCH_NUM;
+			}
+			# Проходим по результату запроса
+			while ($row = $result->fetch($assoc_mark)) {
+				$arr_result[] = $row;
 			}
 		}
 		# Возвращаем значение

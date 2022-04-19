@@ -7,10 +7,10 @@ namespace RusaDrako\driver_db\drivers;
 
 
 /** <b>BD Sql Driver Class</b> Драйвер работы с БД MySQL (PDO mysql).
- * @version 1.1.0
- * @created 2020-04-27
- * @author Петухов Леонид <petuhov.leonid@cube8.ru>
- */
+* @version 1.1.0
+* @created 2020-04-27
+* @author Петухов Леонид <petuhov.leonid@cube8.ru>
+*/
 class mysql_pdo_class implements _interface_class {
 
 	use _trait__get_set;
@@ -23,13 +23,13 @@ class mysql_pdo_class implements _interface_class {
 
 
 	/** Подключёние к базе данных
-	 * @var DB Object */
+	* @var DB Object */
 	private		$_pdo						= false;
 
 	/** Имя сервера */
 	private		$_db_server_name			= false;
 	/** Порт сервера */
-//	private		$_db_server_port			= false;
+	//	private		$_db_server_port			= false;
 	/** Имя пользователя */
 	private		$_db_user_name				= false;
 	/** Пароль доступа */
@@ -40,7 +40,7 @@ class mysql_pdo_class implements _interface_class {
 	private		$_db_encoding				= false;
 
 	/** Маркер подключения к БД
-	 * @var bool */
+	* @var bool */
 	private		$_connect					= false;
 
 	/** Число строк затронутых последним запросом */
@@ -74,7 +74,7 @@ class mysql_pdo_class implements _interface_class {
 
 
 	/** Выгрузка класса */
-    public function __destruct() {
+	public function __destruct() {
 		$this->_db_disconnect();
 	}
 
@@ -115,7 +115,8 @@ class mysql_pdo_class implements _interface_class {
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
- 	* @return array Ответ БД. */
+	* @return array Ответ БД.
+	*/
 	private function _query($query) {
 		# Если нет подключения к БД, то возвращаем false
 		if (!$this->_connect) {return false;}
@@ -139,7 +140,7 @@ class mysql_pdo_class implements _interface_class {
 				$num_error = $this->_pdo->errorCode();
 				# Если есть ошибка запроса
 				if ($num_error
-						&& $num_error !=	'00000') {
+				&& $num_error !=	'00000') {
 					# Ошибка при удалении ключевого элементов, где нет каскадного удаления
 					if ('delete ' == substr(mb_strtolower($query), 0, 7)) {
 						# Возвращаем false
@@ -160,23 +161,25 @@ class mysql_pdo_class implements _interface_class {
 
 
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
-	 * @param string $query Строка запроса.
-	 * @param string $assoc Ассоциативный массив.
-	 * @return array Ответ БД (массив данных). */
+	* @param string $query Строка запроса.
+	* @param string $assoc Ассоциативный массив.
+	* @return array Ответ БД (массив данных).
+	*/
 	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = [];
 		# Выполняем запрос
 		if ($result = $this->_query($query)) {
 			$arr_result = [];
+			# Если следует использовать ключевое поле
 			if ($assoc) {
-				while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-					$arr_result[] = $row;
-				}
+				$assoc_mark = \PDO::FETCH_ASSOC;
 			} else {
-				while ($row = $result->fetch(\PDO::FETCH_NUM)) {
-					$arr_result[] = $row;
-				}
+				$assoc_mark = \PDO::FETCH_NUM;
+			}
+			# Проходим по результату запроса
+			while ($row = $result->fetch($assoc_mark)) {
+				$arr_result[] = $row;
 			}
 		}
 		# Возвращаем значение
@@ -188,8 +191,8 @@ class mysql_pdo_class implements _interface_class {
 
 
 	/** Чистка переменной для БД.
-	 * @param array $v Значение переменной.
-	 */
+	* @param array $v Значение переменной.
+	*/
 	protected function _db_get_set_clean($v) {
 		$v = \addslashes($v);
 		return $v;
