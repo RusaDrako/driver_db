@@ -27,7 +27,7 @@ class db_setting {
 			'user'           => $reg->get($prefix . '_USER',           'root'),        # Имя пользователя
 			'password'       => $reg->get($prefix . '_PASS',           ''),            # Пароль доступа
 			'db'             => $reg->get($prefix . '_DBNAME',         null),          # Имя БД
-			'encoding'       => $reg->get($prefix . '_ENCODING',       'utf8'),        # Кодировка (mysql)
+			'encoding'       => $reg->get($prefix . '_ENCODING',       'utf8mb4'),     # Кодировка (mysql)
 			'encoding_sys'   => $reg->get($prefix . '_ENCODING_SYS',   'UTF-8'),       # Кодировка Системы (mssql)
 			'encoding_db'    => $reg->get($prefix . '_ENCODING_DB',    'CP1251'),      # Кодировка БД (mssql)
 		];
