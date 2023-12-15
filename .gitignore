@@ -1,0 +1,9 @@
+/.idea
+/.svn
+/.ftpconfig
+/.ftpignore
+/vendor
+/composer.lock
+/**/___*
+/**/___*.*
+/**/*.bat
