@@ -1,16 +1,13 @@
 <?php
+
 namespace RusaDrako\driver_db\drivers;
 
+trait _trt__get_val {
 
-
-
-trait _trait__get_val {
-
-
-
-	/** Обновляет строку в таблице масивом переменных по условию.
-	* @param array $array Массив с переменными.
-	*/
+	/**
+	 * Обновляет строку в таблице масивом переменных по условию.
+	 * @param array $array Массив с переменными.
+	 */
 	public function _db_get_val($array) {
 		# Нулевой массив результата
 		$result = [
@@ -43,13 +40,10 @@ trait _trait__get_val {
 		return $result;
 	}
 
-
-
-
-
-	/** Обновляет строку в таблице масивом переменных по условию.
-	* @param array $array Массив с переменными.
-	*/
+	/**
+	 * Обновляет строку в таблице масивом переменных по условию.
+	 * @param array $array Массив с переменными.
+	 */
 	public function _db_get_val_ins($array) {
 		# Нулевой массив результата
 		$result = [
@@ -77,8 +71,6 @@ trait _trait__get_val {
 		# Возвращаем результат
 		return $result;
 	}
-
-
 
 /**/
 }

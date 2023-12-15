@@ -2,100 +2,46 @@
 
 namespace RusaDrako\driver_db\drivers;
 
-
-
-
-
-/** <b>BD Sql Driver Class</b> Драйвер работы с БД MySQL (sqlsrv).
- * @version 1.0.0
- * @created 2018-09-27
+/**
+ * Драйвер работы с БД MySQL (sqlsrv).
+ * @created 2020-12-15
  * @author Петухов Леонид <petuhov.leonid@cube8.ru>
  */
-//class mysql_class extends _abstract_class {
-class sqlsrv_class implements _interface_class {
+class driver_sqlsrv extends _abs_driver {
 
-	use _trait__get_set;
-	use _trait__update;
-	use _trait__insert;
-	use _trait__delete;
-	use _trait__query;
-	use _trait__error;
+	use _trt__get_set;
+	use _trt__update;
+	use _trt__insert;
+	use _trt__delete;
+	use _trt__query;
+	use _trt__error;
 
-
-
-	/** Подключёние к базе данных
-	 * @var DB Object */
-	private		$db							= false;
-
-	/** Имя сервера */
-	private		$_db_server_name			= false;
-	/** Порт сервера */
-//	private		$_db_server_port			= false;
-	/** Имя пользователя */
-	private		$_db_user_name				= false;
-	/** Пароль доступа */
-	private		$_db_password				= false;
-	/** Имя БД */
-	private		$_db_name_db				= false;
 	/** Кодировка системы */
-	private		$_db_encoding_sys			= false;
+	protected $_db_encoding_sys;
 	/** Кодировка БД */
-	private		$_db_encoding_db			= false;
+	protected $_db_encoding_db;
 
-	/** Маркер подключения к БД
-	 * @var bool */
-	private		$_connect					= false;
+	protected 	$_flag_start = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; ";
+	protected 	$_flag_finish = "";
 
-	/** Число строк затронутых последним запросом */
-	private		$_count_rows				= 0;
-
-	private 	$_flag_start = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; ";
-	private 	$_flag_finish = "";
-
-
-
-
-
-	/** Загрузка класса */
-	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
+	/** Установка настроек */
+	protected function _set_setting($settings) {
+		parent::_set_setting($settings);
+		$this->_db_host = $this->_db_host . ($this->_db_port ? ":{$this->_db_port}" : '');
 		# Настройки подключения к БД
-		$this->_db_server_name		= $obj_settings->get_value('host');				# Имя сервера
-		if ($port = $obj_settings->get_value('port')) {
-			$this->_db_server_name		.= ':' . $port;								# Имя сервера + порт
-		}
-		$this->_db_user_name		= $obj_settings->get_value('user');				# Имя пользователя
-		$this->_db_password			= $obj_settings->get_value('password');			# Пароль доступа
-		$this->_db_name_db			= $obj_settings->get_value('db');				# Имя БД
-		$this->_db_encoding_sys		= $obj_settings->get_value('encoding_sys');		# Кодировка Системы
-		$this->_db_encoding_db		= $obj_settings->get_value('encoding_db');		# Кодировка БД
-		# Подключение к БД
-		if ($this->_db_connect()) {
-			$this->_connect = true;
-		};
+		$this->_db_encoding_sys = $settings['encoding_sys'] ?: null;   # Кодировка Системы
+		$this->_db_encoding_db = $settings['encoding_db'] ?: null;     # Кодировка БД
 	}
-
-
-
-
-
-	/** Выгрузка класса */
-    public function __destruct() {
-		$this->_db_disconnect();
-	}
-
-
-
-
 
 	/** Функция создания соединения с БД */
-	private function _db_connect() {
+	protected function _db_connect() {
 		# Подключаемся к БД-серверу
-		$connectionInfo = ["Database"=>$this->_db_name_db, "UID"=>$this->_db_user_name, "PWD"=>$this->_db_password];
-		$db = \sqlsrv_connect($this->_db_server_name, $connectionInfo);
+		$connectionInfo = ["Database"=>$this->_db_name, "UID"=>$this->_db_user, "PWD"=>$this->_db_password];
+		$db = \sqlsrv_connect($this->_db_host, $connectionInfo);
 		if (false === $db) {
 			$errors = \sqlsrv_errors();
-			$num_error = $error['code'];
-			$error = $error['message'];
+			$num_error = $errors['code'];
+			$error = $errors['message'];
 			# Вывод сообщения об ошибке
 			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . $num_error . ': ' . $error);
 		}
@@ -105,32 +51,21 @@ class sqlsrv_class implements _interface_class {
 		return true;
 	}
 
-
-
-
-
 	/** Функция разрыва соединения с БД */
-	private function _db_disconnect() {
+	protected function _db_disconnect() {
 		# Если БД подключена
-		if (false !== $this->db) {
+		if ($this->db) {
 			# Отключаем БД
 			\sqlsrv_close($this->db);
 		}
-		# Обнуляем переменную
-		$this->db = false;
+		parent::_db_disconnect();
 	}
-
-
-
-
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД. */
-	private function _query($query) {
-		# Если нет подключения к БД, то возвращаем false
-		if (!$this->_connect) {return false;}
+	protected function _query($query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -163,10 +98,6 @@ class sqlsrv_class implements _interface_class {
 		return $result;
 	}
 
-
-
-
-
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
 	 * @param string $query Строка запроса.
 	 * @param string $assoc Ассоциативный массив.
@@ -193,10 +124,6 @@ class sqlsrv_class implements _interface_class {
 		return $arr_result;
 	}
 
-
-
-
-
 	/** Чистка переменной для БД.
 	 * @param array $v Значение переменной.
 	 */
@@ -206,12 +133,8 @@ class sqlsrv_class implements _interface_class {
 		return $v;
 	}
 
-
-
-
-
 	/** Обработчик результатов запросов */
-	private function _data_handler ($array) {
+	protected function _data_handler ($array) {
 		if (\is_array($array)) {
 			foreach ($array as $k => $v) {
 				$array[$k] = $this->{__FUNCTION__}($v);
@@ -232,19 +155,11 @@ class sqlsrv_class implements _interface_class {
 		return $array;
 	}
 
-
-
-
-
 	/**  Возвращает ID последней вставленной строки или значение последовательности */
 	public function insert_id() {
 		return $this->_count_rows;
 //		return \sqlsrv_rows_affected($result);
 	}
-
-
-
-
 
 	##########################################################
 	############## БОЛЬШАЯ ЗАПЛАТКА ##########################
@@ -252,7 +167,7 @@ class sqlsrv_class implements _interface_class {
 	############## В КОДИРОВКУ UTF-8 #########################
 	##########################################################
 	/* Устанавливается порядок определения по массиву */
-	private function _win_to_utf ($array) {
+	protected function _win_to_utf ($array) {
 		if (\is_array($array)) {
 			foreach ($array as $k => $v) {
 				$array[$k] = $this->{__FUNCTION__}($v);
@@ -264,17 +179,13 @@ class sqlsrv_class implements _interface_class {
 	}
 	##########################################################
 
-
-
-
-
 	##########################################################
 	############## БОЛЬШАЯ ЗАПЛАТКА ##########################
 	############## ДЛЯ ПЕРЕВОДА МАССИВА ИЗ MSSQL##############
 	############## В КОДИРОВКУ UTF-8 #########################
 	##########################################################
 	/* Устанавливается порядок определения по массиву */
-	private function _utf_to_win ($array) {
+	protected function _utf_to_win ($array) {
 		if (\is_array($array)) {
 			foreach ($array as $k => $v) {
 				$array[$k] = $this->{__FUNCTION__}($v);
@@ -285,11 +196,6 @@ class sqlsrv_class implements _interface_class {
 		return $array;
 	}
 	##########################################################
-
-
-
-
-
 
 /**/
 }

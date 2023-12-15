@@ -1,17 +1,16 @@
 <?php
+
 namespace RusaDrako\driver_db\drivers;
 
+trait _trt__update {
 
-
-trait _trait__update {
-
-
-
-	/** Обновляет строку в таблице масивом переменных по условию.
+	/**
+	 * Обновляет строку в таблице масивом переменных по условию.
 	 * @param string $table_name Имя таблицы.
 	 * @param array $array_update Массив с переменными для обновления.
 	 * @param array/string $where Условие обработки строк.
-	 * @return bool true или false. */
+	 * @return bool true или false.
+	 */
 	public function update(string $table_name, array $array_update, $where) {
 		# Проверка условий прерывания кода
 		if (empty($table_name)
@@ -37,8 +36,6 @@ trait _trait__update {
 		# Возвращаем результат
 		return $this->_count_rows;
 	}
-
-
 
 /**/
 }

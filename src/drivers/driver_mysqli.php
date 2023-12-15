@@ -2,128 +2,64 @@
 
 namespace RusaDrako\driver_db\drivers;
 
-
-
-
-
-/** <b>BD Sql Driver Class</b> Драйвер работы с БД MySQL (mysql).
- * @version 1.1.0
- * @created 2020-04-27
+/**
+ * Драйвер работы с БД MySQL (mysqli).
+ * @created 2020-12-15
  * @author Петухов Леонид <petuhov.leonid@cube8.ru>
  */
-class mysql_class implements _interface_class {
+class driver_mysqli extends _abs_driver {
 
-	use _trait__get_set;
-	use _trait__update;
-	use _trait__insert;
-	use _trait__delete;
-	use _trait__query;
-	use _trait__error;
+	use _trt__get_set;
+	use _trt__update;
+	use _trt__insert;
+	use _trt__delete;
+	use _trt__query;
+	use _trt__error;
 
-
-
-	/** Подключёние к базе данных
-	 * @var DB Object */
-	private		$db							= false;
-
-	/** Имя сервера */
-	private		$_db_server_name			= false;
-	/** Порт сервера */
-//	private		$_db_server_port			= false;
-	/** Имя пользователя */
-	private		$_db_user_name				= false;
-	/** Пароль доступа */
-	private		$_db_password				= false;
-	/** Имя БД */
-	private		$_db_name_db				= false;
 	/** Кодировка */
-	private		$_db_encoding				= false;
+	protected $_db_encoding;
 
-	/** Маркер подключения к БД
-	 * @var bool */
-	private		$_connect					= false;
-
-	/** Число строк затронутых последним запросом */
-	private		$_count_rows				= 0;
-
-
-
-
-
-	/** Загрузка класса */
-	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
+	/** Установка настроек */
+	protected function _set_setting($settings) {
+		parent::_set_setting($settings);
+		$this->_db_host = $this->_db_host . ($this->_db_port ? ":{$this->_db_port}" : '');
 		# Настройки подключения к БД
-		$this->_db_server_name		= $obj_settings->get_value('host');				# Имя сервера
-		if ($port = $obj_settings->get_value('port')) {
-			$this->_db_server_name		.= ':' . $port;								# Имя сервера + порт
-		}
-		$this->_db_user_name		= $obj_settings->get_value('user');				# Имя пользователя
-		$this->_db_password			= $obj_settings->get_value('password');			# Пароль доступа
-		$this->_db_name_db			= $obj_settings->get_value('db');				# Имя БД
-		$this->_db_encoding			= $obj_settings->get_value('encoding');			# Кодировка
-		# Подключение к БД
-		if ($this->_db_connect()) {
-			$this->_connect = true;
-		};
+		$this->_db_encoding = $settings['encoding'] ?: null;   # Кодировка
 	}
-
-
-
-
-
-	/** Выгрузка класса */
-    public function __destruct() {
-		$this->_db_disconnect();
-	}
-
-
-
-
 
 	/** Функция создания соединения с БД */
-	private function _db_connect() {
+	protected function _db_connect() {
 		# Подключаемся к БД-серверу
-		$db = @\mysql_connect($this->_db_server_name, $this->_db_user_name, $this->_db_password);
+		$db = @\mysqli_connect($this->_db_host, $this->_db_user, $this->_db_password, $this->_db_name);
 		if (!$db) {
 			# Выводим сообщение об ошибке
-			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . \mysql_connect_error());
+			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . \mysqli_connect_error());
 		} else {
 			# Присваеваем переменной соединение с БД
 			$this->db = $db;
 			# Настройка кодировка
-			\mysql_set_charset($this->_db_encoding, $this->db);
+			\mysqli_set_charset($this->db, $this->_db_encoding);
 			# Подключение заданной БД
-			\mysql_select_db($this->_db_name_db, $this->db);
+			\mysqli_select_db($this->db, $this->_db_name);
 			# Возвращаем результат
 			return true;
 		}
 	}
 
-
-
-
-
 	/** Функция разрыва соединения с БД */
-	private function _db_disconnect() {
+	protected function _db_disconnect() {
 		# Если БД подключена
-		if (false !== $this->db) {
+		if ($this->db) {
 			# Отключаем БД
-			\mysql_close($this->db);
+			\mysqli_close($this->db);
 		}
-		# Обнуляем переменную
-		$this->db = false;
+		parent::_db_disconnect();
 	}
-
-
-
-
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
  	* @return array Ответ БД. */
-	private function _query(string $query) {
-		# Если нет подключения к БД, то возвращаем false
-		if (!$this->_connect) {return false;}
+	protected function _query($query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -131,11 +67,11 @@ class mysql_class implements _interface_class {
 			# Если переменная запроса является строкой
 			if (is_string($query)) {
 				# Выполнение запроса
-				$result = \mysql_query($query, $this->db);
-$this->_count_rows = \mysql_affected_rows($this->db);
-//echo 'Затронуто строк: ' . $this->_count_rows . '<br>';
+				$result = \mysqli_query($this->db, $query);
+				# Затронуто строк
+				$this->_count_rows = \mysqli_affected_rows($this->db);
 				# Получение ошибки запроса
-				$num_error = \mysql_errno($this->db);
+				$num_error = \mysqli_errno($this->db);
 				# Если есть ошибка запроса
 				if ($num_error) {
 					# Ошибка при удалении ключевого элементов, где нет каскадного удаления
@@ -143,14 +79,14 @@ $this->_count_rows = \mysql_affected_rows($this->db);
 						# Возвращаем false
 						return false;
 					}
-					$error = \mysql_error($this->db);
+					$error = \mysqli_error($this->db);
 					# Вывод/генерация сообщения об ошибке
 					$this->_error($num_error, $error, $query);
 				} else {
 					# Если вызывался call, то нужна чистка, иначе не срабатывает
 					# Для остальных выдаёт ошибку
 					if ('call' == strtolower(substr(trim($query), 0, 4))) {
-						\mysql_next_result($this->db);
+						\mysqli_next_result($this->db);
 					}
 				}
 			}
@@ -159,30 +95,26 @@ $this->_count_rows = \mysql_affected_rows($this->db);
 		return $result;
 	}
 
-
-
-
-
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
 	 * @param string $query Строка запроса.
 	 * @param string $assoc Ассоциативный массив.
 	 * @return array Ответ БД (массив данных). */
 	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
-		$arr_result = array();
+		$arr_result = [];
 		# Выполняем запрос
 		if ($result = $this->_query($query)) {
-			$arr_result = array();
+			$arr_result = [];
 			# Если следует использовать ключевое поле
 			if ($assoc) {
 				# Проходим по результату запроса
-				while ($array_temp = \mysql_fetch_assoc($result)) {
+				while ($array_temp = \mysqli_fetch_assoc($result)) {
 					# Формируем массив результатов - с использованием ключа
 					$arr_result[] = $array_temp;
 				}
 			} else {
 				# Проходим по результату запроса
-				while ($array_temp = \mysql_fetch_row($result)) {
+				while ($array_temp = \mysqli_fetch_row($result)) {
 					# Формируем массив результатов - обезличенный
 					$arr_result[] = $array_temp;
 				}
@@ -192,30 +124,19 @@ $this->_count_rows = \mysql_affected_rows($this->db);
 		return $arr_result;
 	}
 
-
-
-
-
 	/** Чистка переменной для БД.
 	 * @param array $v Значение переменной.
 	 */
 	protected function _db_get_set_clean($v) {
-		$v = \mysql_real_escape_string($v, $this->db);
+		$v = \mysqli_real_escape_string($this->db, $v);
 		$v = \str_replace("'", '&#039;', $v);
 		return $v;
 	}
 
-
-
-
-
 	/**  Возвращает ID последней вставленной строки или значение последовательности */
 	public function insert_id() {
-		return \mysql_insert_id($this->db);
+		return \mysqli_insert_id($this->db);
 	}
-
-
-
 
 /**/
 }

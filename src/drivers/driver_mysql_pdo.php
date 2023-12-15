@@ -2,124 +2,53 @@
 
 namespace RusaDrako\driver_db\drivers;
 
+/**
+ * Драйвер работы с БД MySQL (PDO mysql).
+ * @created 2020-12-15
+ * @author Петухов Леонид <petuhov.leonid@cube8.ru>
+ */
+class driver_mysql_pdo extends _abs_driver {
 
+	use _trt__get_set;
+	use _trt__update;
+	use _trt__insert;
+	use _trt__delete;
+	use _trt__query;
+	use _trt__error;
 
-
-
-/** <b>BD Sql Driver Class</b> Драйвер работы с БД MySQL (PDO mysql).
-* @version 1.1.0
-* @created 2020-04-27
-* @author Петухов Леонид <petuhov.leonid@cube8.ru>
-*/
-class mysql_pdo_class implements _interface_class {
-
-	use _trait__get_set;
-	use _trait__update;
-	use _trait__insert;
-	use _trait__delete;
-	use _trait__query;
-	use _trait__error;
-
-
-
-	/** Подключёние к базе данных
-	* @var DB Object */
-	private		$_pdo						= false;
-
-	/** Имя сервера */
-	private		$_db_server_name			= false;
-	/** Порт сервера */
-	//	private		$_db_server_port			= false;
-	/** Имя пользователя */
-	private		$_db_user_name				= false;
-	/** Пароль доступа */
-	private		$_db_password				= false;
-	/** Имя БД */
-	private		$_db_name_db				= false;
 	/** Кодировка */
-	private		$_db_encoding				= false;
+	protected $_db_encoding;
 
-	/** Маркер подключения к БД
-	* @var bool */
-	private		$_connect					= false;
-
-	/** Число строк затронутых последним запросом */
-	private		$_count_rows				= 0;
-
-
-
-
-
-	/** Загрузка класса */
-	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
-		# Получаем версию PHP и разбиваем её в массив по точке
-		$arr_php_vertion = explode('.',phpversion());
+	/** Установка настроек */
+	protected function _set_setting($settings) {
+		parent::_set_setting($settings);
+		$this->_db_host = $this->_db_host . ($this->_db_port ? ":{$this->_db_port}" : '');
 		# Настройки подключения к БД
-		$this->_db_server_name		= $obj_settings->get_value('host');					# Имя сервера
-		if ($port = $obj_settings->get_value('port')) {
-			$this->_db_server_name		.= ':' . $port;								# Имя сервера + порт
-		}
-		$this->_db_user_name		= $obj_settings->get_value('user');				# Имя пользователя
-		$this->_db_password			= $obj_settings->get_value('password');			# Пароль доступа
-		$this->_db_name_db			= $obj_settings->get_value('db');				# Имя БД
-		$this->_db_encoding			= $obj_settings->get_value('encoding');			# Кодировка
-		# Подключение к БД
-		if ($this->_db_connect()) {
-			$this->_connect = true;
-		};
+		$this->_db_encoding = $settings['encoding'] ?: null;   # Кодировка
 	}
-
-
-
-
-
-	/** Выгрузка класса */
-	public function __destruct() {
-		$this->_db_disconnect();
-	}
-
-
-
-
 
 	/** Функция создания соединения с БД */
-	private function _db_connect() {
-		$dsn = 'mysql:dbname=' . $this->_db_name_db . ';host=' . $this->_db_server_name;
+	protected function _db_connect() {
+		$dsn = 'mysql:dbname=' . $this->_db_name . ';host=' . $this->_db_server_name;
 		# Подключаемся к БД-серверу
 		try {
-			$pdo = new \PDO($dsn, $this->_db_user_name, $this->_db_password);
+			$pdo = new \PDO($dsn, $this->_db_user, $this->_db_password);
 		} catch (\PDOException $e) {
 			# Выводим сообщение об ошибке
 			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . $e->getMessage());
 		}
 
 		# Присваеваем переменной соединение с БД
-		$this->_pdo = $pdo;
+		$this->db = $pdo;
 		# Возвращаем результат
 		return true;
 	}
-
-
-
-
-
-	/** Функция разрыва соединения с БД */
-	private function _db_disconnect() {
-		# Обнуляем переменную
-		$this->_pdo = false;
-	}
-
-
-
-
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
 	* @return array Ответ БД.
 	*/
-	private function _query($query) {
-		# Если нет подключения к БД, то возвращаем false
-		if (!$this->_connect) {return false;}
+	protected function _query($query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -128,7 +57,7 @@ class mysql_pdo_class implements _interface_class {
 			if (is_string($query)) {
 				# Выполнение запроса
 				$result = false;
-				$result = $this->_pdo->query($query);
+				$result = $this->db->query($query);
 				if (\is_bool($result)) {
 					$this->_count_rows = 0;
 				} else if (\get_class($result) == 'PDOStatement') {
@@ -137,7 +66,7 @@ class mysql_pdo_class implements _interface_class {
 					$this->_count_rows = 0;
 				}
 				# Получение ошибки запроса
-				$num_error = $this->_pdo->errorCode();
+				$num_error = $this->db->errorCode();
 				# Если есть ошибка запроса
 				if ($num_error
 				&& $num_error !=	'00000') {
@@ -146,7 +75,7 @@ class mysql_pdo_class implements _interface_class {
 						# Возвращаем false
 						return false;
 					}
-					$error = $this->_pdo->errorInfo();
+					$error = $this->db->errorInfo();
 					# Вывод/генерация сообщения об ошибке
 					$this->_error($num_error, $error[2], $query);
 				}
@@ -155,10 +84,6 @@ class mysql_pdo_class implements _interface_class {
 		# Возвращаем значение
 		return $result;
 	}
-
-
-
-
 
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
 	* @param string $query Строка запроса.
@@ -186,10 +111,6 @@ class mysql_pdo_class implements _interface_class {
 		return $arr_result;
 	}
 
-
-
-
-
 	/** Чистка переменной для БД.
 	* @param array $v Значение переменной.
 	*/
@@ -198,18 +119,10 @@ class mysql_pdo_class implements _interface_class {
 		return $v;
 	}
 
-
-
-
-
 	/**  Возвращает ID последней вставленной строки или значение последовательности */
 	public function insert_id() {
-		return $this->_pdo->lastInsertId();
+		return $this->db->lastInsertId();
 	}
-
-
-
-
 
 /**/
 }

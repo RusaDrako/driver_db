@@ -2,96 +2,42 @@
 
 namespace RusaDrako\driver_db\drivers;
 
-
-
-
-
-/** <b>BD Sql Driver Class</b> Драйвер работы с БД MySQL (PDO sqlsrv).
- * @version 1.1.0
- * @created 2020-04-27
+/**
+ * Драйвер работы с БД MySQL (PDO sqlsrv).
+ * @created 2020-12-15
  * @author Петухов Леонид <petuhov.leonid@cube8.ru>
  */
-class sqlsrv_pdo_class implements _interface_class {
+class driver_sqlsrv_pdo extends _abs_driver {
 
-	use _trait__get_set;
-	use _trait__update;
-	use _trait__insert;
-	use _trait__delete;
-	use _trait__query;
-	use _trait__error;
+	use _trt__get_set;
+	use _trt__update;
+	use _trt__insert;
+	use _trt__delete;
+	use _trt__query;
+	use _trt__error;
 
-
-
-	/** Подключёние к базе данных
-	 * @var DB Object */
-	private		$_pdo						= false;
-
-	/** Имя сервера */
-	private		$_db_server_name			= false;
-	/** Порт сервера */
-//	private		$_db_server_port			= false;
-	/** Имя пользователя */
-	private		$_db_user_name				= false;
-	/** Пароль доступа */
-	private		$_db_password				= false;
-	/** Имя БД */
-	private		$_db_name_db				= false;
-	/** Кодировка Системы */
-	private		$_db_encoding_sys			= false;
+	/** Кодировка системы */
+	protected $_db_encoding_sys;
 	/** Кодировка БД */
-	private		$_db_encoding_db			= false;
+	protected $_db_encoding_db;
 
-	/** Маркер подключения к БД
-	 * @var bool */
-	private		$_connect					= false;
-
-	/** Число строк затронутых последним запросом */
-	private		$_count_rows				= 0;
-
-	private 	$_flag_start = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; ";
-	private 	$_flag_finish = "";
+	protected $_flag_start = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; ";
+	protected $_flag_finish = "";
 
 
-
-
-
-	/** Загрузка класса */
-	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
-		# Получаем версию PHP и разбиваем её в массив по точке
-		$arr_php_vertion = explode('.',phpversion());
+	/** Установка настроек */
+	protected function _set_setting($settings) {
+		parent::_set_setting($settings);
+		$this->_db_host = $this->_db_host . ($this->_db_port ? ":{$this->_db_port}" : '');
 		# Настройки подключения к БД
-		$this->_db_server_name		= $obj_settings->get_value('host');						# Имя сервера
-		if ($port = $obj_settings->get_value('port')) {
-			$this->_db_server_name		.= ':' . $port;										# Имя сервера + порт
-		}
-		$this->_db_user_name		= $obj_settings->get_value('user');						# Имя пользователя
-		$this->_db_password			= $obj_settings->get_value('password');					# Пароль доступа
-		$this->_db_name_db			= $obj_settings->get_value('db');						# Имя БД
-		$this->_db_encoding_sys		= $obj_settings->get_value('encoding_sys', 'UTF-8');	# Кодировка Системы
-		$this->_db_encoding_db		= $obj_settings->get_value('encoding_db');				# Кодировка БД
-		# Подключение к БД
-		if ($this->_db_connect()) {
-			$this->_connect = true;
-		};
+		$this->_db_encoding_sys = $settings['encoding_sys'] ?: null;   # Кодировка Системы
+		$this->_db_encoding_db = $settings['encoding_db'] ?: null;     # Кодировка БД
 	}
-
-
-
-
-
-	/** Выгрузка класса */
-    public function __destruct() {
-		$this->_db_disconnect();
-	}
-
-
-
-
 
 	/** Функция создания соединения с БД */
-	private function _db_connect() {
+	protected function _db_connect() {
 		# Настройки DNS
-		$dsn = "sqlsrv:Server=" . $this->_db_server_name . ";Database=" . $this->_db_name_db . ";";
+		$dsn = "sqlsrv:Server=" . $this->_db_server_name . ";Database=" . $this->_db_name . ";";
 //		print_info(new \PDO());
 		# Опции
 		$options = [
@@ -99,7 +45,7 @@ class sqlsrv_pdo_class implements _interface_class {
 			"CharacterSet"				=> $this->_db_encoding_sys,
 		];
 		try {
-			$pdo = new \PDO ($dsn, $this->_db_user_name, $this->_db_password, $options);
+			$pdo = new \PDO ($dsn, $this->_db_user, $this->_db_password, $options);
 			$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		# Ловим ошибку
 		} catch (\PDOException $e) {
@@ -107,28 +53,15 @@ class sqlsrv_pdo_class implements _interface_class {
 			throw new \Exception(__FILE__ . '(' . __LINE__ . ') Ошибка подключения к БД: ' . $e->getMessage());
 		}
 		# Присваеваем переменной соединение с БД
-		$this->_pdo = $pdo;
+		$this->db = $pdo;
 		# Возвращаем результат
 		return true;
 	}
 
-
-	/** Функция разрыва соединения с БД */
-	private function _db_disconnect() {
-		# Обнуляем переменную
-		$this->_pdo = false;
-	}
-
-
-
-
-
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
  	* @return array Ответ БД. */
-	private function _query($query) {
-		# Если нет подключения к БД, то возвращаем false
-		if (!$this->_connect) {return false;}
+	protected function _query($query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -137,7 +70,7 @@ class sqlsrv_pdo_class implements _interface_class {
 			if (is_string($query)) {
 				# Выполнение запроса
 				$result = false;
-				$result = $this->_pdo->query($this->_flag_start . $query . $this->_flag_finish);
+				$result = $this->db->query($this->_flag_start . $query . $this->_flag_finish);
 				if (\is_bool($result)) {
 					$this->_count_rows = 0;
 				} else if (\get_class($result) == 'PDOStatement') {
@@ -146,7 +79,7 @@ class sqlsrv_pdo_class implements _interface_class {
 					$this->_count_rows = 0;
 				}
 				# Получение ошибки запроса
-				$num_error = $this->_pdo->errorCode();
+				$num_error = $this->db->errorCode();
 				# Если есть ошибка запроса
 				if ($num_error
 						&& $num_error !=	'00000') {
@@ -155,7 +88,7 @@ class sqlsrv_pdo_class implements _interface_class {
 						# Возвращаем false
 						return false;
 					}
-					$error = $this->_pdo->errorInfo();
+					$error = $this->db->errorInfo();
 					# Вывод/генерация сообщения об ошибке
 					$this->_error($num_error, $error, $query);
 				}
@@ -164,10 +97,6 @@ class sqlsrv_pdo_class implements _interface_class {
 		# Возвращаем значение
 		return $result;
 	}
-
-
-
-
 
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
 	 * @param string $query Строка запроса.
@@ -194,10 +123,6 @@ class sqlsrv_pdo_class implements _interface_class {
 		return $arr_result;
 	}
 
-
-
-
-
 	/** Чистка переменной для БД.
 	 * @param array $v Значение переменной.
 	 */
@@ -206,16 +131,10 @@ class sqlsrv_pdo_class implements _interface_class {
 		return $v;
 	}
 
-
-
-
-
 	/**  Возвращает ID последней вставленной строки или значение последовательности */
 	public function insert_id() {
-		return $this->_pdo->lastInsertId();
+		return $this->db->lastInsertId();
 	}
-
-
 
 /**/
 }

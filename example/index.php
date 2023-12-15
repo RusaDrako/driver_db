@@ -1,38 +1,44 @@
 <pre><?php
+
+use RusaDrako\driver_db\DB;
+
 require_once('../src/autoload.php');
 
+$db = new DB();
+
+$set_1 = [
+	'DRIVER' => DB::DRV_MYSQLI,
+	'HOST' => 'localhost',
+	'USER' => 'root',
+	'DBNAME' => '',
+];
+
+$set_2 = [
+	'DRIVER' => DB::DRV_MYSQL_PDO,
+	'HOST' => 'localhost',
+	'USER' => 'root',
+	'DBNAME' => '',
+];
+
 # Настройки подключения
-$reg = new RD_DB_get();
-$reg->set('TEST_DRIVER', 'mysqli');
-$reg->set('TEST_HOST', 'localhost');
-$reg->set('TEST_USER', 'root');
-$reg->set('TEST_DBNAME', '');
+$db->setDB('db1', $set_1);
+$db->setDB('db2', $set_2);
 
-$reg->set('TEST2_DRIVER', 'mysql_pdo');
-$reg->set('TEST2_HOST', 'localhost');
-$reg->set('TEST2_USER', 'root');
-$reg->set('TEST2_DBNAME', '');
-
-print_r($reg);
-
-
-
-
-# Активация БД
-$db = new RD_DB('TEST', $reg);
-$db2 = new RD_DB('TEST2', $reg);
+print_r($db);
 
 echo '<hr>';
-
+echo '<hr>';
 
 $sql = 'SELECT @@version';
 
-
-$result = $db->select($sql);
-print_r($result);
+$db_1 = $db->getDBConnect('db1');
+$result_1 = $db_1->select($sql);
+print_r($result_1);
+echo '<hr>';
 echo '<hr>';
 
-
-$result2 = $db2->select($sql);
-print_r($result2);
+$db_2 = $db->getDBConnect('db2');
+$result_2 = $db_2->select($sql);
+print_r($result_2);
+echo '<hr>';
 echo '<hr>';

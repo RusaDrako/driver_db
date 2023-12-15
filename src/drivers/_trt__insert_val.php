@@ -1,18 +1,16 @@
 <?php
+
 namespace RusaDrako\driver_db\drivers;
 
+trait _trt__insert_val {
 
-
-trait _trait__insert_val {
-
-
-
-	/** Cоздаёт строку в таблице с заданными переменными.
-	* @param string $table_name Имя таблицы.
-	* @param array $array_insert Массив с переменными для добавления.
-	* @param array $arr_where Условие добавления строки.
-	* @return array Ответ БД (номер новой строки) или false.
-	*/
+	/**
+	 * Cоздаёт строку в таблице с заданными переменными.
+	 * @param string $table_name Имя таблицы.
+	 * @param array $array_insert Массив с переменными для добавления.
+	 * @param array $arr_where Условие добавления строки.
+	 * @return array Ответ БД (номер новой строки) или false.
+	 */
 	public function insert(string $table_name, array $array_insert, $arr_where = []) {
 		# Проверка условий прерывания кода
 		if (empty($table_name)) {
@@ -45,8 +43,6 @@ trait _trait__insert_val {
 		# Возвращаем результат
 		return $new_id;
 	}
-
-
 
 /**/
 }

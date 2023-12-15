@@ -1,11 +1,13 @@
 <?php
+
 namespace RusaDrako\driver_db\drivers;
 
 use RusaDrako\driver_db\ExceptionDB;
 
-trait _trait__error{
+trait _trt__error{
 
-	/** Генерация ошибки.
+	/**
+	 * Генерация ошибки.
 	 * @param string $num_error Номер ошибки.
 	 * @param string $error Текст ошибки.
 	 * @param string $query Тело запроса.

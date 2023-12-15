@@ -3,56 +3,40 @@
 namespace RusaDrako\driver_db;
 
 /**
- * Расширение БД
+ * Класс подключения к БД
  */
-class DB extends CoreDB {
+class DB {
 
-	/** Возвращает результат запроса в БД.
-	 * @param string $query Строка запроса
-	 * @param array $data Массив данных для запроса
- 	 * @return array Ответ БД.
-	 */
-	public function query(string $query, array $data = []) {
-		return $this->_obj_driver->query($query, $data);
+	/** Типы драйверов */
+	const DRV_MYSQL = 'mysql';
+	const DRV_MYSQLI = 'mysqli';
+	const DRV_MYSQL_PDO = 'mysql_pdo';
+	const DRV_SQLITE3 = 'sqlite3';
+	const DRV_SQLSRV = 'sqlsrv';
+	const DRV_SQLSRV_PDO = 'sqlsrv_pdo';
+
+	/** @var SettingDB|null Объект настроек */
+	protected $_objSetting = null;
+	/** @var array Соединения */
+	protected $_arrCoccnects = [];
+
+	/** Загрузка класса */
+	public function __construct() {
+		$this->_objSetting = new SettingDB();
 	}
 
-	/** Cоздаёт строку в таблице с заданными переменными.
-	 * @param string $table_name Имя таблицы.
-	 * @param array $array_insert Массив с переменными для добавления.
-	 * @param array/string $where Условие добавления строки.
-	 * @return array Ответ БД (номер новой строки) или false.
-	 */
-	public function insert(string $table_name, array $array_insert, $where = []) {
-		return $this->_obj_driver->insert($table_name, $array_insert, $where);
+	/** Устанавливает настройки подключения */
+	public function setDB(string $dbName, array $settings) {
+		$this->_objSetting->set($dbName, $settings);
+		unset($this->_objDriver[$dbName]);
 	}
 
-	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
-	 * @param string $query Строка запроса.
-	 * @param array $data Массив данных для запроса
-	 * @param string $assoc Ассоциативный массив.
-	 * @return array Ответ БД (массив данных).
-	 */
-	public function select(string $query, $assoc = true) {
-		return $this->_obj_driver->select($query, (bool) $assoc);
-	}
-
-	/** Обновляет строку в таблице масивом переменных по условию.
-	 * @param string $table_name Имя таблицы.
-	 * @param array $array_update Массив с переменными для обновления.
-	 * @param array/string $where Условие обработки строк.
-	 * @return bool true или false.
-	 */
-	public function update(string $table_name, array $array_update, $where) {
-		return $this->_obj_driver->update($table_name, $array_update, $where);
-	}
-
-	/** Удаляет строку из таблицы по условию.
-	 * @param string $table_name Имя таблицы.
-	 * @param array/string $where Условие обработки строк.
-	 * @return bool Ответ БД: true - выполнено; false - не выполнено.
-	 */
-	public function delete(string $table_name, $where) {
-		return $this->_obj_driver->delete($table_name, $where);
+	/**  */
+	public function getDBConnect(string $dbName) {
+		if (!array_key_exists($dbName, $this->_arrCoccnects)) {
+			$this->_arrCoccnects[$dbName] = $this->_objSetting->getDriverObject($dbName);
+		}
+		return $this->_arrCoccnects[$dbName];
 	}
 
 /**/

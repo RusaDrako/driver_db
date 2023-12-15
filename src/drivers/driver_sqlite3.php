@@ -2,104 +2,53 @@
 
 namespace RusaDrako\driver_db\drivers;
 
-
-
-
-
-/** <b>BD Sql Driver Class</b> Драйвер работы с БД SQLite (sqlsrv).
- * @version 1.0.0
- * @created 2022-04-08
+/**
+ * Драйвер работы с БД SQLite (sqlsrv).
+ * @created 2020-12-15
  * @author Петухов Леонид <petuhov.leonid@cube8.ru>
  */
-class sqlite3_class implements _interface_class {
+class driver_sqlite3 extends _abs_driver {
 
-	use _trait__get_val;
-	use _trait__update;
-	use _trait__insert_val;
-	use _trait__delete;
-	use _trait__query;
-	use _trait__error;
+	use _trt__get_val;
+	use _trt__update;
+	use _trt__insert_val;
+	use _trt__delete;
+	use _trt__query;
+	use _trt__error;
 
-
-
-	/** Подключёние к базе данных
-	 * @var DB Object */
-	private		$db							= false;
-
-	/** Имя БД */
-	private		$_db_name_db				= false;
-
-	/** Маркер подключения к БД
-	 * @var bool */
-	private		$_connect					= false;
-
-	/** Число строк затронутых последним запросом */
-	private		$_count_rows				= 0;
-
-
-
-
-
-	/** Загрузка класса */
-	public function __construct(\RusaDrako\driver_db\db_setting $obj_settings) {
+	/** Установка настроек */
+	protected function _set_setting($settings) {
 		# Настройки подключения к БД
-		$this->_db_name_db       = $obj_settings->get_value('db');     # Имя БД
-		# Подключение к БД
-		if ($this->_db_connect()) {
-			$this->_connect = true;
-		};
+		$this->_db_name = $settings['db'] ?: null; # Имя БД
 	}
-
-
-
-
-
-	/** Выгрузка класса */
-	public function __destruct() {
-		$this->_db_disconnect();
-	}
-
-
-
 
 
 	/** Функция создания соединения с БД */
-	private function _db_connect() {
+	protected function _db_connect() {
 		# Подключаемся к БД
-		$db = new \SQLite3($this->_db_name_db);
+		$db = new \SQLite3($this->_db_name);
 		# Присваеваем переменной соединение с БД
 		$this->db = $db;
 		# Возвращаем результат
 		return true;
 	}
 
-
-
-
-
 	/** Функция разрыва соединения с БД */
-	private function _db_disconnect() {
+	protected function _db_disconnect() {
 		# Если БД подключена
-		if (false !== $this->db) {
+		if ($this->db) {
 			# Отключаем БД
 			$this->db->close();
 		}
-		# Обнуляем переменную
-		$this->db = false;
+		parent::_db_disconnect();
 	}
-
-
-
-
 
 	/** Функция возвращает возвращает результат запроса в БД.
 	* @param string $query Строка запроса.
 	* @param bool $return_error Маркер возврата сообщения об ошибке.
  	* @return array Ответ БД.
 	*/
-	private function _query($query) {
-		# Если нет подключения к БД, то возвращаем false
-		if (!$this->_connect) {return false;}
+	protected function _query($query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -113,10 +62,6 @@ class sqlite3_class implements _interface_class {
 		# Возвращаем значение
 		return $result;
 	}
-
-
-
-
 
 	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
 	* @param string $query Строка запроса.
@@ -145,10 +90,6 @@ class sqlite3_class implements _interface_class {
 		return $arr_result;
 	}
 
-
-
-
-
 	/** Чистка переменной для БД.
 	* @param array $v Значение переменной.
 	*/
@@ -158,18 +99,10 @@ class sqlite3_class implements _interface_class {
 		return $v;
 	}
 
-
-
-
-
-	/**  Возвращает ID последней вставленной строки или значение последовательности */
+	/** Возвращает ID последней вставленной строки или значение последовательности */
 	public function insert_id() {
 		return $this->_count_rows;
 	}
-
-
-
-
 
 /**/
 }
