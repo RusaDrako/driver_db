@@ -56,7 +56,7 @@ class db_setting_Test extends TestCase {
 		'ENCODING'     => [
 			'set_title' => 'encoding',
 			'data'      => 'utf81',
-			'default'   => 'utf8',
+			'default'   => 'utf8mb4',
 		],
 		# Кодировка Системы (mssql)
 		'ENCODING_SYS' => [
@@ -125,7 +125,7 @@ class db_setting_Test extends TestCase {
 		$prefix = 'TEST_DATA';
 		foreach ($this->arr_setting_data as $k => $v) {
 			$result = $this->_test_object->get_value($v['set_title']);
-			$this->assertEquals($result, $v['data'], "Значение элемента не совпадает: {$k} -> {$v['title']}");
+			$this->assertEquals($result, $v['data'], "Значение элемента не совпадает: {$k} -> {$v['set_title']}");
 		}
 	}
 
@@ -141,7 +141,7 @@ class db_setting_Test extends TestCase {
 		$prefix = 'TEST_DATA';
 		foreach ($this->arr_setting_data as $k => $v) {
 			$result = $this->_test_object->get_value($v['set_title']);
-			$this->assertEquals($result, $v['default'], "Значение элемента не совпадает: {$k} -> {$v['title']}");
+			$this->assertEquals($result, $v['default'], "Значение элемента не совпадает: {$k} -> {$v['set_title']}");
 		}
 	}
 
