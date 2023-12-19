@@ -12,7 +12,7 @@ $arr_db_set['mysql'] = [
 	'HOST' => 'localhost',
 	'USER' => 'root',
 	'PASS' => '',
-	'DBNAME' => '',
+	'DBNAME' => 'test',
 ];
 
 $arr_db_set['mysql_pdo'] = array_merge($arr_db_set['mysql'], ['DRIVER' => DB::DRV_MYSQL_PDO]);
@@ -22,7 +22,7 @@ $arr_db_set['pg_pdo'] = [
 	'HOST' => 'localhost',
 	'USER' => 'postgres',
 	'PASS' => 'postgres',
-//	'DBNAME' => '',
+	'DBNAME' => 'test',
 ];
 
 $arr_db_set['sqlite3'] = [
