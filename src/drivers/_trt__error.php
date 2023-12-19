@@ -14,7 +14,8 @@ trait _trt__error{
 	 */
 	public function _error(string $num_error, string $error, string $query=''){
 		# Генерация ошибки
-		throw new ExceptionDB('Ошибка запроса в БД ('.\get_class()."): {$num_error}: {$error}<br>\r\n{$query}", $num_error);
+		$message = 'Ошибка запроса в БД ('.\get_class()."): {$num_error}: {$error}<br>\r\n{$query}";
+		throw new DriverDB($message, (int)$num_error);
 	}
 
 /**/
