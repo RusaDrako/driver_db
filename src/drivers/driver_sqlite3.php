@@ -10,11 +10,7 @@ namespace RusaDrako\driver_db\drivers;
 class driver_sqlite3 extends _abs_driver {
 
 	use _trt__get_val;
-	use _trt__update;
 	use _trt__insert_val;
-	use _trt__delete;
-	use _trt__query;
-	use _trt__error;
 
 	/** Установка настроек */
 	protected function _set_setting($settings) {
@@ -56,7 +52,16 @@ class driver_sqlite3 extends _abs_driver {
 			# Если переменная запроса является строкой
 			if (\is_string($query)) {
 				# Выполнение запроса
-				$result = $this->db->query($query);
+//				try {
+					$result = $this->db->query($query);
+					if ($result === false) {
+						# Выводим сообщение об ошибке
+						$this->_error($this->db->lastErrorCode(), $this->db->lastErrorMsg(), $query);
+					}
+//				} catch (\Exception $e) {
+//					var_dump($e);
+//					exit;
+//				}
 			}
 		}
 		# Возвращаем значение

@@ -9,13 +9,6 @@ namespace RusaDrako\driver_db\drivers;
  */
 class driver_sqlsrv extends _abs_driver {
 
-	use _trt__get_set;
-	use _trt__update;
-	use _trt__insert;
-	use _trt__delete;
-	use _trt__query;
-	use _trt__error;
-
 	/** Кодировка системы */
 	protected $_db_encoding_sys;
 	/** Кодировка БД */
