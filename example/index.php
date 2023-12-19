@@ -1,44 +1,87 @@
 <pre><?php
 
 use RusaDrako\driver_db\DB;
+use RusaDrako\driver_db\drivers\DriverDB;
 
 require_once('../src/autoload.php');
 
 $db = new DB();
 
-$set_1 = [
+$arr_db_set['mysql'] = [
 	'DRIVER' => DB::DRV_MYSQLI,
 	'HOST' => 'localhost',
 	'USER' => 'root',
+	'PASS' => '',
 	'DBNAME' => '',
 ];
 
-$set_2 = [
-	'DRIVER' => DB::DRV_MYSQL_PDO,
+$arr_db_set['mysql_pdo'] = array_merge($arr_db_set['mysql'], ['DRIVER' => DB::DRV_MYSQL_PDO]);
+
+$arr_db_set['pg_pdo'] = [
+	'DRIVER' => DB::DRV_PG_PDO,
 	'HOST' => 'localhost',
-	'USER' => 'root',
-	'DBNAME' => '',
+	'USER' => 'postgres',
+	'PASS' => 'postgres',
+//	'DBNAME' => '',
 ];
+
+$arr_db_set['sqlite3'] = [
+	'DRIVER' => DB::DRV_SQLITE3,
+	'HOST' => __DIR__ . '/test.db',
+];
+
+$arr_db_set['sqlite3_pdo'] = array_merge($arr_db_set['sqlite3'], ['DRIVER' => DB::DRV_SQLITE3_PDO]);
 
 # Настройки подключения
-$db->setDB('db1', $set_1);
-$db->setDB('db2', $set_2);
+foreach($arr_db_set as $k => $v) {
+	$db->setDB($k, $v);
+}
 
-print_r($db);
+//print_r($db);
 
-echo '<hr>';
-echo '<hr>';
-
-$sql = 'SELECT @@version';
-
-$db_1 = $db->getDBConnect('db1');
-$result_1 = $db_1->select($sql);
-print_r($result_1);
 echo '<hr>';
 echo '<hr>';
 
-$db_2 = $db->getDBConnect('db2');
-$result_2 = $db_2->select($sql);
-print_r($result_2);
-echo '<hr>';
-echo '<hr>';
+# Версия БД
+foreach($arr_db_set as $k => $v) {
+	$sql = '';
+	if (in_array($k, ['mysql', 'mysql_pdo'])) {
+		$sql = 'SELECT @@version';
+	} else if (in_array($k, ['pg', 'pg_pdo'])) {
+		$sql = 'SELECT version()';
+	} else if (in_array($k, ['sqlite3', 'sqlite3_pdo'])) {
+		$sql = 'SELECT sqlite_version()';
+	}
+	$db_connect = $db->getDBConnect($k);
+	$result = $db_connect->select($sql);
+	print_r($result);
+	echo '<hr>';
+	echo '<hr>';
+}
+
+
+
+$sql = 'SELECT wrongcolumn FROM wrongtable';
+
+# Запрос с ошибкой
+foreach($arr_db_set as $k => $v) {
+	try {
+		$db_connect = $db->getDBConnect($k);
+		$result = $db_connect->select($sql);
+		print_r($result);
+	} catch(DriverDB $e) {
+		echo '<hr>';
+		$class = get_class($e);
+		echo "<h3>{$k} => {$class}</h3>";
+		echo $e->getMessage();
+//		print_r($e);
+	} catch(Exception $e) {
+		echo '<hr>';
+		$class = get_class($e);
+		echo "<h3>{$k} => {$class}</h3>";
+		echo $e->getMessage();
+
+	}
+	echo '<hr>';
+	echo '<hr>';
+}
