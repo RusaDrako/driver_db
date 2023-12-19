@@ -18,7 +18,7 @@ class SettingDB {
 			'driver'       => $setting['DRIVER'] ?: CoreDB::DRV_MYSQLI, # Драйвер БД
 			'host'         => $setting['HOST'] ?: 'localhost',          # Имя сервера
 			'port'         => $setting['PORT'] ?: null,                 # Порт
-			'user'         => $setting['USER'] ?: 'root',               # Имя пользователя
+			'user'         => $setting['USER'] ?: '',                   # Имя пользователя
 			'password'     => $setting['PASS'] ?: '',                   # Пароль доступа
 			'db'           => $setting['DBNAME'] ?:  null,              # Имя БД
 			'encoding'     => $setting['ENCODING'] ?: 'utf8mb4',        # Кодировка (mysql)

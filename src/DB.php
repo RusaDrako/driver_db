@@ -12,8 +12,10 @@ class DB {
 	const DRV_MYSQLI = 'mysqli';
 	const DRV_MYSQL_PDO = 'mysql_pdo';
 	const DRV_SQLITE3 = 'sqlite3';
+	const DRV_SQLITE3_PDO = 'sqlite3_pdo';
 	const DRV_SQLSRV = 'sqlsrv';
 	const DRV_SQLSRV_PDO = 'sqlsrv_pdo';
+	const DRV_PG_PDO = 'pg_pdo';
 
 	/** @var SettingDB|null Объект настроек */
 	protected $_objSetting = null;
