@@ -5,7 +5,7 @@ namespace RusaDrako\driver_db\drivers;
 /**
  * Абстрактный класс драйвера.
  * @created 2023-12-15
- * @author Петухов Леонид <petuhov.leonid@cube8.ru>
+ * @author Петухов Леонид <rusadrako@yandex.ru>
  */
 abstract class _abs_driver implements _inf_driver {
 

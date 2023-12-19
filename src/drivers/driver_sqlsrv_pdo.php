@@ -5,7 +5,7 @@ namespace RusaDrako\driver_db\drivers;
 /**
  * Драйвер работы с БД MsSQL (PDO sqlsrv).
  * @created 2020-12-15
- * @author Петухов Леонид <petuhov.leonid@cube8.ru>
+ * @author Петухов Леонид <rusadrako@yandex.ru>
  */
 class driver_sqlsrv_pdo extends _abs_driver_pdo {
 

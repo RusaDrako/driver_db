@@ -5,7 +5,7 @@ namespace RusaDrako\driver_db\drivers;
 /**
  * Драйвер работы с БД MySQL (PDO mysql).
  * @created 2020-12-15
- * @author Петухов Леонид <petuhov.leonid@cube8.ru>
+ * @author Петухов Леонид <rusadrako@yandex.ru>
  */
 class driver_mysql_pdo extends _abs_driver_pdo {
 

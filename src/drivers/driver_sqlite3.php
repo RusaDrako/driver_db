@@ -5,7 +5,7 @@ namespace RusaDrako\driver_db\drivers;
 /**
  * Драйвер работы с БД SQLite (sqlsrv).
  * @created 2020-12-15
- * @author Петухов Леонид <petuhov.leonid@cube8.ru>
+ * @author Петухов Леонид <rusadrako@yandex.ru>
  */
 class driver_sqlite3 extends _abs_driver {
 
