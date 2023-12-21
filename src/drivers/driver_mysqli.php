@@ -49,10 +49,12 @@ class driver_mysqli extends _abs_driver {
 		parent::_db_disconnect();
 	}
 
-	/** Функция возвращает возвращает результат запроса в БД.
-	* @param string $query Строка запроса.
- 	* @return array Ответ БД. */
-	protected function _query($query) {
+	/**
+	 * Функция возвращает возвращает результат запроса в БД.
+	 * @param string $query Строка запроса.
+	 * @return array Ответ БД.
+	 */
+	protected function _query(string $query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -88,10 +90,12 @@ class driver_mysqli extends _abs_driver {
 		return $result;
 	}
 
-	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
+	/**
+	 * Функция возвращает массив результата запроса select (массив полей ID) или false.
 	 * @param string $query Строка запроса.
-	 * @param string $assoc Ассоциативный массив.
-	 * @return array Ответ БД (массив данных). */
+	 * @param bool $assoc Возвращать ассоциотивный массив полей
+	 * @return array Ответ БД (массив данных).
+	 */
 	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = [];

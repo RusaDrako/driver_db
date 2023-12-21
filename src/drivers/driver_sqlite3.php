@@ -39,12 +39,12 @@ class driver_sqlite3 extends _abs_driver {
 		parent::_db_disconnect();
 	}
 
-	/** Функция возвращает возвращает результат запроса в БД.
-	* @param string $query Строка запроса.
-	* @param bool $return_error Маркер возврата сообщения об ошибке.
- 	* @return array Ответ БД.
-	*/
-	protected function _query($query) {
+	/**
+	 * Функция возвращает возвращает результат запроса в БД.
+	 * @param string $query Строка запроса.
+	 * @return array Ответ БД.
+	 */
+	protected function _query(string $query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -68,11 +68,12 @@ class driver_sqlite3 extends _abs_driver {
 		return $result;
 	}
 
-	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
-	* @param string $query Строка запроса.
-	* @param string $assoc Ассоциативный массив.
-	* @return array Ответ БД (массив данных).
-	*/
+	/**
+	 * Функция возвращает массив результата запроса select (массив полей ID) или false.
+	 * @param string $query Строка запроса.
+	 * @param bool $assoc Возвращать ассоциотивный массив полей
+	 * @return array Ответ БД (массив данных).
+	 */
 	public function select(string $query, bool $assoc = true) {
 		# Значение результата по-умолчанию
 		$arr_result = [];
@@ -96,8 +97,8 @@ class driver_sqlite3 extends _abs_driver {
 	}
 
 	/** Чистка переменной для БД.
-	* @param array $v Значение переменной.
-	*/
+	 * @param array $v Значение переменной.
+	 */
 	protected function _db_get_set_clean($v) {
 		$v = \htmlspecialchars(\stripslashes(\trim($v)));
 		$v = \str_replace("'", '&#039;', $v);

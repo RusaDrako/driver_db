@@ -9,6 +9,9 @@ namespace RusaDrako\driver_db\drivers;
  */
 class driver_sqlsrv_pdo extends _abs_driver_pdo {
 
+	/** @var string Наименование для PDO */
+	protected $typeName = 'sqlsrv';
+
 	/** Кодировка системы */
 	protected $_db_encoding_sys;
 	///** Кодировка БД */

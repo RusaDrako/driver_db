@@ -7,7 +7,7 @@ trait _trt__delete {
 	/**
 	 * Удаляет строку из таблицы по условию.
 	 * @param string $table_name Имя таблицы.
-	 * @param array/string $where Условие обработки строк.
+	 * @param array|string $where Условие обработки строк.
 	 * @return bool Ответ БД: true - выполнено; false - не выполнено.
 	 */
 	public function delete(string $table_name, $where) {

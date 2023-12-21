@@ -38,11 +38,12 @@ abstract class _abs_driver_pdo extends _abs_driver {
 		return true;
 	}
 
-	/** Функция возвращает возвращает результат запроса в БД.
+	/**
+	 * Функция возвращает возвращает результат запроса в БД.
 	 * @param string $query Строка запроса.
 	 * @return array Ответ БД.
 	 */
-	protected function _query($query) {
+	protected function _query(string $query) {
 		# Значение результата по-умолчанию
 		$result = false;
 		# Если переменная запроса не пустая
@@ -79,9 +80,10 @@ abstract class _abs_driver_pdo extends _abs_driver {
 		return $result;
 	}
 
-	/** Функция возвращает массив результата запроса select (массив полей ID) или false.
+	/**
+	 * Функция возвращает массив результата запроса select (массив полей ID) или false.
 	 * @param string $query Строка запроса.
-	 * @param string $assoc Ассоциативный массив.
+	 * @param bool $assoc Возвращать ассоциотивный массив полей
 	 * @return array Ответ БД (массив данных).
 	 */
 	public function select(string $query, bool $assoc = true) {

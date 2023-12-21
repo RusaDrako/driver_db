@@ -8,7 +8,7 @@ trait _trt__update {
 	 * Обновляет строку в таблице масивом переменных по условию.
 	 * @param string $table_name Имя таблицы.
 	 * @param array $array_update Массив с переменными для обновления.
-	 * @param array/string $where Условие обработки строк.
+	 * @param array|string $where Условие обработки строк.
 	 * @return bool true или false.
 	 */
 	public function update(string $table_name, array $array_update, $where) {
