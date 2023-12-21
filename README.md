@@ -54,11 +54,11 @@ DB::DRV_SQLITE3;     // SQLite3
 DB::DRV_SQLITE3_PDO; // PDO:sqlite
 DB::DRV_SQLSRV;      // sqlsrv
 DB::DRV_SQLSRV_PDO;  // PDO:sqlsrv
-DB::DRV_PG_PDO;      // PostgreSQL
+DB::DRV_PG_PDO;      // PDO:pgsql
 ```
 
 ## Матрица настроек подключения
-| Поле | Описание | По умолчанию | mysql | mysqli | PDO:mysql | SQLite3 | PDO:sqlite | sqlsrv | PDO:sqlsrv | PostgreSQL |
+| Поле | Описание | По умолчанию | mysql | mysqli | PDO:mysql | SQLite3 | PDO:sqlite | sqlsrv | PDO:sqlsrv | PDO:pgsql |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **DRIVER** | Драйвер | DB::DRV_MYSQLI | DB::DRV_MYSQL | DB::DRV_MYSQLI | DB::DRV_MYSQL_PDO | DB::DRV_SQLITE3 | DB::DRV_SQLITE3_PDO | DB::DRV_SQLSRV | DB::DRV_SQLSRV_PDO | DB::DRV_PG_PDO |
 | **HOST** | Сервер | localhost | + | + | + | + | + | + | + | + |
