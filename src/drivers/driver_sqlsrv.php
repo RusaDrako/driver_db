@@ -70,7 +70,7 @@ class driver_sqlsrv extends _abs_driver {
 				$result = \sqlsrv_query($this->db, $this->_flag_start . $query . $this->_flag_finish);
 				if ($result === false) {
 					# Получение ошибки запроса
-					if(($errors = \sqlsrv_errors()) != null) {
+					if(($error = \sqlsrv_errors()) != null) {
 						# Получение ошибки запроса
 						$num_error = $error['code'];
 						# Сообщение об ошибке
