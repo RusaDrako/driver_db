@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../src/autoload.php');
 
 
 /**
- * @author Петухов Леонид <l.petuhov@okonti.ru>
+ * @author Петухов Леонид <rusadrako@yandex.ru>
  */
 class db_setting_Test extends TestCase {
 	/** */
