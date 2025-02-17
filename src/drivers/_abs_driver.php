@@ -19,6 +19,8 @@ abstract class _abs_driver implements _inf_driver {
 	/** @var DB Подключёние к БД */
 	protected $db;
 
+	/** _db_unix_socke */
+	protected $_db_unix_socket;
 	/** Имя сервера */
 	protected $_db_host;
 	/** Порт */
